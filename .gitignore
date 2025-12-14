@@ -35,7 +35,3 @@ build/
 # OS files
 Thumbs.db
 .DS_Store
-
-# Personal files (keep these in .gitignore)
-WhatsApp*.png
-WhatsApp*.jpg
