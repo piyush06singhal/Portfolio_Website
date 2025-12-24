@@ -4,13 +4,13 @@ import './Projects.css'
 const Projects = () => {
   const projects = [
     {
-      title: 'Travel Landing Page',
-      description: 'Explore our travel landing page designed to captivate and inform. Immerse yourself in stunning imagery, discover destination highlights, and interact with interactive maps. Receive personalized recommendations and practical travel tips curated for your journey. Start planning your next adventure today and join our community of passionate travelers.',
-      technologies: ['HTML5', 'CSS3', 'JavaScript', 'Responsive Design'],
-      image: '/download - Copy.jpeg',
+      title: 'Smart Study Management Platform',
+      description: 'StudyFlow is a full-stack study management platform built with Next.js, TypeScript, and Supabase, focused on smart planning, progress tracking, and productivity analytics. It features automated scheduling, rich notes, flashcards with spaced repetition, deadline tracking, and data-driven study insights.',
+      technologies: ['Next.js', 'TypeScript', 'Supabase', 'Analytics', 'Spaced Repetition'],
+      image: '/download(5).jpg',
       isImage: true,
-      link: 'https://piyush06singhal.github.io/codsoft_travel_landing_page/',
-      github: 'https://github.com/piyush06singhal/codsoft_travel_landing_page'
+      link: 'https://study-resource-organizer.vercel.app/',
+      github: 'https://github.com/piyush06singhal/study-resource-organizer'
     },
     {
       title: 'Youtube Video Classifier',
@@ -31,13 +31,13 @@ const Projects = () => {
       github: 'https://github.com/piyush06singhal/linkedin-auto'
     },
     {
-      title: 'Basic Banking System',
-      description: 'I developed a Basic Banking System showcasing foundational skills in web development and financial technology. This project includes essential features such as user authentication, account management, fund transfers, and transaction history tracking. The system emphasizes usability with intuitive interfaces and responsive design, catering to both desktop and mobile users.',
-      technologies: ['HTML5', 'CSS3', 'JavaScript', 'PHP', 'MySQL'],
-      image: '/image8 - Copy.avif',
+      title: 'IntentOS',
+      description: 'IntentOS v2.0 is a production-grade AI decision intelligence system that converts ambiguous human intent into structured, optimized action plans. It features multi-intent reasoning, confidence-driven clarification, constraint-aware planning, persistent intent memory, and robust guardrails for safe, realistic decision-making.',
+      technologies: ['AI', 'Decision Intelligence', 'Intent Recognition', 'Planning', 'Guardrails'],
+      image: '/download (6).jpg',
       isImage: true,
-      link: 'https://piyush06singhal.github.io/Basic-Banking-System/',
-      github: 'https://github.com/piyush06singhal/Basic-Banking-System'
+      link: 'https://intent-os.vercel.app/',
+      github: 'https://github.com/piyush06singhal/IntentOs'
     },
     {
       title: 'Weather Application',
