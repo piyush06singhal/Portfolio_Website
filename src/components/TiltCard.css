@@ -1,0 +1,28 @@
+.tilt-card {
+  position: relative;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* Cursor-tracking sheen. `overlay` keeps it subtle on light surfaces and
+   bright on dark ones. */
+.tilt-glare {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  z-index: 4;
+}
+
+/* Opt-in depth: children lifted off the card surface so they parallax
+   against it as the card tilts. */
+.tilt-layer {
+  transform: translateZ(38px);
+  transform-style: preserve-3d;
+}
+
+.tilt-layer-sm {
+  transform: translateZ(18px);
+  transform-style: preserve-3d;
+}

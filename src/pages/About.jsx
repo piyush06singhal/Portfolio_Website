@@ -1,4 +1,13 @@
 import { motion } from 'framer-motion'
+import CountUp from '../components/CountUp'
+import MagneticButton from '../components/MagneticButton'
+import {
+  fadeFromLeft,
+  fadeFromRight,
+  popIn,
+  staggerContainer,
+  viewportOnce
+} from '../utils/motion'
 import './About.css'
 
 const About = () => {
@@ -31,15 +40,20 @@ const About = () => {
       <div className="about-content">
         <motion.div
           className="about-image-section"
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.3, duration: 0.8 }}
+          variants={fadeFromLeft}
+          initial="hidden"
+          whileInView="show"
+          viewport={viewportOnce}
         >
           <div className="about-image">
-            <img 
-              src="/WhatsApp Image 2024-12-25 at 22.22.12_7de2bc6e.png" 
-              alt="About Profile" 
+            <img
+              src="/about-portrait.webp"
+              alt="Piyush Singhal"
               className="about-profile-image"
+              width="500"
+              height="600"
+              loading="lazy"
+              decoding="async"
             />
             <div className="image-bg-overlay"></div>
           </div>
@@ -47,9 +61,10 @@ const About = () => {
 
         <motion.div
           className="about-text-section"
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.4, duration: 0.8 }}
+          variants={fadeFromRight}
+          initial="hidden"
+          whileInView="show"
+          viewport={viewportOnce}
         >
           <h2 className="section-title">Who Am I?</h2>
           <p className="about-description">
@@ -68,36 +83,37 @@ const About = () => {
             Let's connect and bring ideas to life!
           </p>
           
-          <motion.a
+          <MagneticButton
+            as="a"
             href="/Piyush_Singhal_Resume.pdf"
             download="Piyush_Singhal_Resume.pdf"
             className="resume-btn"
-            whileHover={{ scale: 1.05, y: -3 }}
-            whileTap={{ scale: 0.95 }}
+            strength={0.25}
           >
             <span className="btn-icon">📄</span>
             <span>Download Resume</span>
             <span className="btn-arrow">↓</span>
-          </motion.a>
+          </MagneticButton>
         </motion.div>
       </div>
 
       <motion.div
         className="stats-grid"
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.6, duration: 0.8 }}
+        variants={staggerContainer(0.12)}
+        initial="hidden"
+        whileInView="show"
+        viewport={viewportOnce}
       >
         {stats.map((stat, index) => (
           <motion.div
             key={index}
             className="stat-card"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.7 + index * 0.1, duration: 0.5 }}
+            variants={popIn}
             whileHover={{ scale: 1.05, y: -5 }}
           >
-            <h3 className="stat-number">{stat.number}</h3>
+            <h3 className="stat-number">
+              <CountUp value={stat.number} />
+            </h3>
             <p className="stat-label">{stat.label}</p>
           </motion.div>
         ))}

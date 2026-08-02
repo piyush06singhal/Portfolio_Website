@@ -99,3 +99,37 @@ LIMIT 50;
 -- Your contact form is now ready to receive messages
 -- Test it by submitting a message from your portfolio website
 -- ============================================
+
+-- ============================================
+-- Newsletter Subscribers
+-- ============================================
+-- Powers the subscribe form in the site footer.
+-- Run this alongside the contact_messages setup above.
+
+CREATE TABLE IF NOT EXISTS newsletter_subscribers (
+  id BIGSERIAL PRIMARY KEY,
+  email TEXT NOT NULL UNIQUE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  confirmed BOOLEAN DEFAULT FALSE
+);
+
+CREATE INDEX IF NOT EXISTS idx_newsletter_created_at
+  ON newsletter_subscribers(created_at DESC);
+
+ALTER TABLE newsletter_subscribers ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Allow public subscribe" ON newsletter_subscribers;
+DROP POLICY IF EXISTS "Allow authenticated reads" ON newsletter_subscribers;
+
+-- Anyone may subscribe; only you (authenticated) can read the list.
+CREATE POLICY "Allow public subscribe" ON newsletter_subscribers
+  FOR INSERT
+  TO anon, authenticated
+  WITH CHECK (true);
+
+CREATE POLICY "Allow authenticated reads" ON newsletter_subscribers
+  FOR SELECT
+  TO authenticated
+  USING (true);
+
+COMMENT ON TABLE newsletter_subscribers IS 'Email signups from the portfolio footer';

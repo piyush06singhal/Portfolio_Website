@@ -1,18 +1,33 @@
+/* Surface colours come from the theme so light mode works.
+   --nav-bg / --nav-bg-scrolled are redefined in the light block below. */
 .navbar {
+  --nav-bg: rgba(15, 23, 42, 0.8);
+  --nav-bg-scrolled: rgba(15, 23, 42, 0.95);
+  --nav-shadow: rgba(0, 0, 0, 0.3);
+
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1000;
-  background: rgba(15, 23, 42, 0.8);
+  background: var(--nav-bg);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   padding: 1rem 0;
-  transition: all 0.3s ease;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+[data-theme='light'] .navbar {
+  --nav-bg: rgba(255, 255, 255, 0.8);
+  --nav-bg-scrolled: rgba(255, 255, 255, 0.95);
+  --nav-shadow: rgba(15, 23, 42, 0.12);
+
+  border-bottom: 1px solid rgba(99, 102, 241, 0.12);
 }
 
 .navbar.scrolled {
-  background: rgba(15, 23, 42, 0.95);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  background: var(--nav-bg-scrolled);
+  box-shadow: 0 4px 20px var(--nav-shadow);
 }
 
 .nav-container {
@@ -79,6 +94,9 @@
   flex-direction: column;
   cursor: pointer;
   gap: 5px;
+  background: none;
+  border: none;
+  padding: 4px;
 }
 
 .hamburger span {
@@ -102,16 +120,21 @@
 }
 
 @media (max-width: 768px) {
+  /* Absolute inside the fixed .navbar, so `top: 100%` tracks the real nav
+     height automatically — the old hardcoded 70px drifted once the root font
+     size shrank at this breakpoint. */
   .nav-menu {
-    position: fixed;
-    top: 70px;
+    position: absolute;
+    top: 100%;
     right: -100%;
     flex-direction: column;
-    background: rgba(15, 23, 42, 0.98);
+    background: var(--nav-bg-scrolled, rgba(15, 23, 42, 0.98));
     width: 100%;
     padding: 2rem;
     transition: right 0.3s ease;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 10px 30px var(--nav-shadow, rgba(0, 0, 0, 0.5));
+    max-height: calc(100svh - 100%);
+    overflow-y: auto;
   }
 
   .nav-menu.active {

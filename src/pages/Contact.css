@@ -5,9 +5,7 @@
   margin-top: 2rem;
 }
 
-.contact-info-section {
-  animation: fadeInLeft 0.8s ease-out;
-}
+/* Reveal animations come from framer-motion variants in Contact.jsx. */
 
 .section-title {
   font-size: 2rem;
@@ -109,9 +107,6 @@
   box-shadow: 0 5px 20px rgba(99, 102, 241, 0.4);
 }
 
-.contact-form-section {
-  animation: fadeInRight 0.8s ease-out;
-}
 
 .contact-form {
   background: var(--dark-light);
@@ -171,13 +166,10 @@
   box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
 }
 
+/* No transform here — the submit button is magnetic and framer-motion owns
+   its transform. Shadow alone carries the hover state. */
 .submit-btn:hover {
-  transform: translateY(-2px);
   box-shadow: 0 6px 25px rgba(99, 102, 241, 0.6);
-}
-
-.submit-btn:active {
-  transform: translateY(0);
 }
 
 .status-message {
@@ -191,16 +183,7 @@
   font-weight: 600;
 }
 
-@keyframes fadeInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
+
 
 @keyframes fadeInRight {
   from {
@@ -213,7 +196,7 @@
   }
 }
 
-@media (max-width: 968px) {
+@media (max-width: 1024px) {
   .contact-container {
     grid-template-columns: 1fr;
     gap: 3rem;
@@ -228,7 +211,7 @@
   }
 }
 
-@media (max-width: 576px) {
+@media (max-width: 480px) {
   .contact-form {
     padding: 1.5rem;
   }
@@ -280,40 +263,6 @@
   color: var(--primary);
   background: var(--dark-light);
   padding: 0 0.5rem;
-}
-
-/* Success Animation */
-@keyframes success-bounce {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-}
-
-.status-message {
-  animation: success-bounce 0.5s ease;
-}
-
-/* Contact Map Placeholder */
-.contact-map {
-  width: 100%;
-  height: 300px;
-  background: var(--dark-light);
-  border-radius: 20px;
-  margin-top: 3rem;
-  border: 1px solid rgba(99, 102, 241, 0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.map-placeholder {
-  font-size: 3rem;
-  opacity: 0.3;
 }
 
 /* Availability Status */
@@ -411,4 +360,70 @@
 .footer-social-link svg {
   width: 20px;
   height: 20px;
+}
+
+/* ============================================
+   Submit button states + form plumbing
+   ============================================ */
+
+.submit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.75rem;
+  overflow: hidden;
+}
+
+.submit-btn:disabled {
+  cursor: wait;
+  opacity: 0.85;
+}
+
+.submit-btn.is-sent {
+  background: var(--success);
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.45);
+}
+
+.btn-state {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  white-space: nowrap;
+}
+
+.btn-spinner {
+  width: 1.1rem;
+  height: 1.1rem;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+.btn-check {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* Reserves space so the form doesn't jump when a status message appears. */
+.status-region {
+  min-height: 3.5rem;
+}
+
+/* Honeypot: off-screen rather than display:none, which some bots skip. */
+.honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* The floating label needs a solid backdrop to sit on the input border. */
+[data-theme='light'] .form-group input:focus ~ .floating-label,
+[data-theme='light'] .form-group input:not(:placeholder-shown) ~ .floating-label,
+[data-theme='light'] .form-group textarea:focus ~ .floating-label,
+[data-theme='light'] .form-group textarea:not(:placeholder-shown) ~ .floating-label {
+  background: var(--dark-light);
 }

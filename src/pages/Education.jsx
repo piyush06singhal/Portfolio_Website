@@ -1,4 +1,13 @@
 import { motion } from 'framer-motion'
+import Timeline from '../components/Timeline'
+import TiltCard from '../components/TiltCard'
+import {
+  fadeFromLeft,
+  fadeFromSide,
+  fadeUp,
+  staggerContainer,
+  viewportOnce
+} from '../utils/motion'
 import './Education.css'
 
 const Education = () => {
@@ -7,8 +16,8 @@ const Education = () => {
       degree: 'BTech - Computer Science Engineering',
       institution: 'Nims University, Rajasthan',
       period: '2023 - 2027',
-      description: 'Currently pursuing Bachelor of Technology in Computer Science Engineering with a CGPA of 9.20. Focusing on advanced programming, data structures, algorithms, AI/ML, and software development.',
-      grade: 'CGPA: 9.20',
+      description: 'Currently pursuing Bachelor of Technology in Computer Science Engineering with a CGPA of 9.0. Focusing on advanced programming, data structures, algorithms, AI/ML, and software development.',
+      grade: 'CGPA: 9.0',
       icon: '🎓'
     },
     {
@@ -26,6 +35,41 @@ const Education = () => {
       description: 'Completed secondary education with strong performance in Mathematics, Science, and Computer Applications.',
       grade: '86%',
       icon: '📖'
+    }
+  ]
+
+  const achievements = [
+    {
+      icon: '🏆',
+      badge: 'AIR 83',
+      title: 'CodeChef Starters 184 (2025)',
+      description:
+        'Secured AIR 83 among 20,000+ participants in CodeChef Starter 184 (2025).'
+    },
+    {
+      icon: '📈',
+      title: 'Competitive Programming Ratings',
+      description:
+        '1700+ rating on CodeChef, 1350+ rating on Codeforces and 1700+ rating on Leetcode.',
+      ratings: [
+        { platform: 'CodeChef', rating: '1700+' },
+        { platform: 'Codeforces', rating: '1350+' },
+        { platform: 'LeetCode', rating: '1700+' }
+      ]
+    },
+    {
+      icon: '🧩',
+      badge: '500+',
+      title: 'DSA Problems Solved',
+      description:
+        'Solved 500+ DSA problems on platforms like CodeChef and LeetCode, strengthening core coding skills.'
+    },
+    {
+      icon: '🌐',
+      badge: 'GSoC 2026',
+      title: 'Open Source — EduAid @ AOSSIE',
+      description:
+        'Contributed to the EduAid project under AOSSIE while preparing a GSoC 2026 proposal, gaining experience with bug fixing, feature enhancements, code reviews, and collaborative Git workflows in a large open-source codebase.'
     }
   ]
 
@@ -62,20 +106,22 @@ const Education = () => {
       <div className="timeline-section">
         <motion.h2
           className="section-heading"
-          initial={{ opacity: 0, x: -30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
+          variants={fadeFromLeft}
+          initial="hidden"
+          whileInView="show"
+          viewport={viewportOnce}
         >
           📚 Education
         </motion.h2>
-        <div className="timeline">
+        <Timeline>
           {education.map((item, index) => (
             <motion.div
               key={index}
               className="timeline-item"
-              initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.4 + index * 0.2, duration: 0.6 }}
+              variants={fadeFromSide(index % 2 === 0)}
+              initial="hidden"
+              whileInView="show"
+              viewport={viewportOnce}
             >
               <div className="timeline-icon">{item.icon}</div>
               <div className="timeline-content">
@@ -89,26 +135,84 @@ const Education = () => {
               </div>
             </motion.div>
           ))}
-        </div>
+        </Timeline>
       </div>
 
       <div className="timeline-section">
         <motion.h2
           className="section-heading"
-          initial={{ opacity: 0, x: -30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.8, duration: 0.6 }}
+          variants={fadeFromLeft}
+          initial="hidden"
+          whileInView="show"
+          viewport={viewportOnce}
+        >
+          🏅 Achievements
+        </motion.h2>
+
+        <motion.div
+          className="achievement-grid"
+          variants={staggerContainer(0.1)}
+          initial="hidden"
+          whileInView="show"
+          viewport={viewportOnce}
+        >
+          {achievements.map((item) => (
+            <TiltCard
+              key={item.title}
+              className="achievement-card"
+              max={8}
+              variants={fadeUp}
+              whileHover={{ y: -6 }}
+            >
+              <div className="achievement-head tilt-layer-sm">
+                <span className="achievement-icon" aria-hidden="true">
+                  {item.icon}
+                </span>
+                {item.badge && (
+                  <span className="achievement-badge">{item.badge}</span>
+                )}
+              </div>
+
+              <h3 className="achievement-title tilt-layer-sm">{item.title}</h3>
+
+              {item.ratings ? (
+                <ul className="rating-list tilt-layer-sm">
+                  {item.ratings.map((entry) => (
+                    <li key={entry.platform} className="rating-item">
+                      <span className="rating-platform">{entry.platform}</span>
+                      <span className="rating-value">{entry.rating}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="achievement-description tilt-layer-sm">
+                  {item.description}
+                </p>
+              )}
+            </TiltCard>
+          ))}
+        </motion.div>
+      </div>
+
+      <div className="timeline-section">
+        <motion.h2
+          className="section-heading"
+          variants={fadeFromLeft}
+          initial="hidden"
+          whileInView="show"
+          viewport={viewportOnce}
         >
           💼 Internships
         </motion.h2>
-        <div className="timeline">
+        <Timeline>
           {internships.map((item, index) => (
             <motion.div
               key={index}
               className="timeline-item"
-              initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.9 + index * 0.2, duration: 0.6 }}
+              variants={fadeFromSide(index % 2 === 0)}
+              initial="hidden"
+              whileInView="show"
+              viewport={viewportOnce}
             >
               <div className="timeline-icon">{item.icon}</div>
               <div className="timeline-content">
@@ -124,7 +228,7 @@ const Education = () => {
               </div>
             </motion.div>
           ))}
-        </div>
+        </Timeline>
       </div>
     </div>
   )

@@ -1,4 +1,6 @@
 import { motion } from 'framer-motion'
+import SkillTile from '../components/SkillTile'
+import { fadeUp, staggerContainer, viewportOnce } from '../utils/motion'
 import './Skills.css'
 
 const Skills = () => {
@@ -73,33 +75,21 @@ const Skills = () => {
           <motion.div
             key={catIndex}
             className="skill-category"
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 + catIndex * 0.2, duration: 0.6 }}
+            variants={staggerContainer(0.08, 0.1)}
+            initial="hidden"
+            whileInView="show"
+            viewport={viewportOnce}
           >
-            <h2 className="category-title">{category.title}</h2>
-            <div className="skills-list">
-              {category.skills.map((skill, skillIndex) => (
-                <motion.div
-                  key={skillIndex}
-                  className="skill-item"
-                  initial={{ opacity: 0, x: -30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.4 + catIndex * 0.2 + skillIndex * 0.1, duration: 0.5 }}
-                >
-                  <div className="skill-header">
-                    <span className="skill-name">{skill.name}</span>
-                    <span className="skill-percentage">{skill.level}%</span>
-                  </div>
-                  <div className="skill-bar">
-                    <motion.div
-                      className="skill-progress"
-                      initial={{ width: 0 }}
-                      animate={{ width: `${skill.level}%` }}
-                      transition={{ delay: 0.5 + catIndex * 0.2 + skillIndex * 0.1, duration: 1, ease: 'easeOut' }}
-                    />
-                  </div>
-                </motion.div>
+            <motion.h2 className="category-title" variants={fadeUp}>
+              {category.title}
+            </motion.h2>
+            <div className="skill-tiles">
+              {category.skills.map((skill) => (
+                <SkillTile
+                  key={skill.name}
+                  name={skill.name}
+                  level={skill.level}
+                />
               ))}
             </div>
           </motion.div>

@@ -1,5 +1,6 @@
 .home {
   min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -26,13 +27,6 @@
   font-weight: 900;
   margin-bottom: 1rem;
   line-height: 1.2;
-}
-
-.gradient-text {
-  background: var(--gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
 }
 
 .hero-subtitle {
@@ -126,30 +120,6 @@
   z-index: 1;
 }
 
-.image-placeholder {
-  width: 100%;
-  aspect-ratio: 1;
-  background: var(--gradient);
-  background-size: 200% 200%;
-  border-radius: 50%;
-  position: relative;
-  animation: float 6s ease-in-out infinite, gradient-shift 8s ease infinite;
-  box-shadow: 0 20px 60px rgba(99, 102, 241, 0.4);
-}
-
-.image-placeholder::before {
-  content: '';
-  position: absolute;
-  inset: -5px;
-  border-radius: 50%;
-  background: var(--gradient);
-  background-size: 200% 200%;
-  animation: gradient-shift 8s ease infinite reverse;
-  filter: blur(20px);
-  opacity: 0.7;
-  z-index: -1;
-}
-
 @keyframes float {
   0%, 100% {
     transform: translateY(0);
@@ -205,7 +175,16 @@
   transform: translateX(-50%);
 }
 
+.scroll-indicator-btn {
+  background: none;
+  border: none;
+  padding: 6px;
+  display: block;
+  line-height: 0;
+}
+
 .mouse {
+  display: block;
   width: 30px;
   height: 50px;
   border: 2px solid var(--primary);
@@ -237,7 +216,7 @@
   }
 }
 
-@media (max-width: 968px) {
+@media (max-width: 1024px) {
   .hero-section {
     grid-template-columns: 1fr;
     text-align: center;
@@ -255,14 +234,9 @@
   .hero-buttons {
     justify-content: center;
   }
-
-  .image-placeholder {
-    max-width: 400px;
-    margin: 0 auto;
-  }
 }
 
-@media (max-width: 576px) {
+@media (max-width: 480px) {
   .hero-title {
     font-size: 2.5rem;
   }
@@ -281,117 +255,16 @@
   }
 }
 
-/* Typing Animation */
-.typing-text {
-  display: inline-block;
-  border-right: 3px solid var(--primary);
-  animation: blink 0.7s infinite;
-}
 
-@keyframes blink {
-  0%, 50% {
-    border-color: var(--primary);
-  }
-  51%, 100% {
-    border-color: transparent;
-  }
-}
 
 /* Enhanced Glow Effect */
 .hero-title {
   text-shadow: 0 0 30px rgba(99, 102, 241, 0.3);
 }
 
-/* Ripple Effect */
-.ripple {
-  position: absolute;
-  border-radius: 50%;
-  background: rgba(99, 102, 241, 0.3);
-  animation: ripple-animation 2s ease-out infinite;
-}
 
-@keyframes ripple-animation {
-  0% {
-    transform: scale(0.8);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(2);
-    opacity: 0;
-  }
-}
 
-/* Stats Counter Animation */
-.stat-counter {
-  font-size: 3rem;
-  font-weight: 800;
-  background: var(--gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
 
-/* Social Proof Section */
-.social-proof {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-  margin-top: 3rem;
-  flex-wrap: wrap;
-}
-
-.proof-item {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--text-secondary);
-  font-size: 0.95rem;
-}
-
-.proof-icon {
-  font-size: 1.5rem;
-}
-
-/* Tech Stack Marquee */
-.tech-marquee {
-  margin-top: 4rem;
-  overflow: hidden;
-  padding: 2rem 0;
-  background: rgba(99, 102, 241, 0.05);
-  border-radius: 15px;
-}
-
-.marquee-content {
-  display: flex;
-  gap: 3rem;
-  animation: marquee 30s linear infinite;
-}
-
-.tech-item {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  padding: 1rem 2rem;
-  background: var(--dark-light);
-  border-radius: 50px;
-  border: 1px solid rgba(99, 102, 241, 0.2);
-  white-space: nowrap;
-  font-weight: 600;
-  color: var(--text);
-}
-
-.tech-icon {
-  font-size: 1.5rem;
-}
-
-@keyframes marquee {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
 
 /* Enhanced Image Border for Home */
 .image-container::after {
@@ -403,4 +276,46 @@
   z-index: 0;
   animation: gradient-shift 8s ease infinite;
   background-size: 200% 200%;
+}
+
+/* Landscape phones are ~380px tall — a 100svh hero with a 4rem headline gets
+   badly squashed, so drop the min-height and tighten the type. */
+@media (max-height: 500px) and (orientation: landscape) {
+  .home {
+    min-height: auto;
+    padding: 6rem 0 3rem;
+  }
+
+  .hero-section {
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 2rem;
+    padding: 1rem 2rem;
+    text-align: left;
+  }
+
+  .hero-title {
+    font-size: 2.2rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .hero-description {
+    font-size: 0.9rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .hero-buttons {
+    justify-content: flex-start;
+  }
+
+  .image-container {
+    max-width: 220px;
+  }
+
+  .scroll-indicator {
+    display: none;
+  }
 }

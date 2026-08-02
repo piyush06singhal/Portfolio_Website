@@ -1,10 +1,19 @@
 .app {
   min-height: 100vh;
+  min-height: 100svh;
+  position: relative;
+}
+
+/* The route wrapper animates transform + filter, which makes it a containing
+   block for absolutely positioned children. Pinning position keeps that
+   consistent so nothing shifts when the transition settles. */
+.page-transition {
   position: relative;
 }
 
 .page {
   min-height: calc(100vh - 80px);
+  min-height: calc(100svh - 80px);
   padding: 100px 20px 50px;
   max-width: 1400px;
   margin: 0 auto;

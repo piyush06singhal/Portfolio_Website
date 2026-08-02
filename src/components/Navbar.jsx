@@ -37,7 +37,7 @@ const Navbar = () => {
           <span className="logo-text">Portfolio</span>
         </Link>
 
-        <div className={`nav-menu ${isOpen ? 'active' : ''}`}>
+        <div className={`nav-menu ${isOpen ? 'active' : ''}`} id="nav-menu">
           {navLinks.map((link, index) => (
             <motion.div
               key={link.path}
@@ -56,11 +56,18 @@ const Navbar = () => {
           ))}
         </div>
 
-        <div className="hamburger" onClick={() => setIsOpen(!isOpen)}>
+        <button
+          type="button"
+          className="hamburger"
+          onClick={() => setIsOpen(!isOpen)}
+          aria-label={isOpen ? 'Close navigation menu' : 'Open navigation menu'}
+          aria-expanded={isOpen}
+          aria-controls="nav-menu"
+        >
           <span className={isOpen ? 'active' : ''}></span>
           <span className={isOpen ? 'active' : ''}></span>
           <span className={isOpen ? 'active' : ''}></span>
-        </div>
+        </button>
       </div>
     </motion.nav>
   )

@@ -1,8 +1,10 @@
-import { motion } from 'framer-motion'
+import { useMemo, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import TiltCard from '../components/TiltCard'
+import { fadeUp, popIn, staggerContainer, viewportOnce } from '../utils/motion'
 import './Projects.css'
 
-const Projects = () => {
-  const projects = [
+const projects = [
     {
       title: 'Smart Study Management Platform',
       description: 'StudyFlow is a full-stack study management platform built with Next.js, TypeScript, and Supabase, focused on smart planning, progress tracking, and productivity analytics. It features automated scheduling, rich notes, flashcards with spaced repetition, deadline tracking, and data-driven study insights.',
@@ -84,7 +86,36 @@ const Projects = () => {
       link: 'https://aimedicineassistantapplication-gs3ehgmqcm9wdkmdqdckrj.streamlit.app/',
       github: 'https://github.com/piyush06singhal/AI_Medicine_Assistant_Application'
     }
-  ]
+]
+
+const Projects = () => {
+  const [activeFilter, setActiveFilter] = useState('All')
+
+  // Filter chips are derived from the technologies already listed on each
+  // project — only those shared by more than one project, so the row stays
+  // short and every chip actually narrows the list.
+  const filters = useMemo(() => {
+    const counts = new Map()
+    projects.forEach((project) =>
+      project.technologies.forEach((tech) =>
+        counts.set(tech, (counts.get(tech) || 0) + 1)
+      )
+    )
+
+    const shared = [...counts.entries()]
+      .filter(([, count]) => count > 1)
+      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+      .map(([tech]) => tech)
+
+    return ['All', ...shared]
+  }, [])
+
+  const visibleProjects =
+    activeFilter === 'All'
+      ? projects
+      : projects.filter((project) =>
+          project.technologies.includes(activeFilter)
+        )
 
   return (
     <div className="page projects-page">
@@ -105,53 +136,110 @@ const Projects = () => {
         Showcasing my best work
       </motion.p>
 
-      <div className="projects-grid">
-        {projects.map((project, index) => (
-          <motion.div
-            key={index}
-            className="project-card"
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 + index * 0.1, duration: 0.6 }}
-            whileHover={{ y: -10 }}
+      <motion.div
+        className="project-filters"
+        variants={staggerContainer(0.05)}
+        initial="hidden"
+        whileInView="show"
+        viewport={viewportOnce}
+      >
+        {filters.map((filter) => (
+          <motion.button
+            key={filter}
+            type="button"
+            className={`filter-btn ${activeFilter === filter ? 'active' : ''}`}
+            onClick={() => setActiveFilter(filter)}
+            variants={popIn}
+            whileHover={{ y: -2 }}
+            whileTap={{ scale: 0.96 }}
+            aria-pressed={activeFilter === filter}
           >
-            <div className="project-image">
-              {project.isImage ? (
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="project-img"
-                />
-              ) : (
-                <span className="project-emoji">{project.image}</span>
-              )}
-            </div>
-            <div className="project-content">
-              <h3 className="project-title">{project.title}</h3>
-              <p className="project-description">{project.description}</p>
-              <div className="project-tech">
-                {project.technologies.map((tech, techIndex) => (
-                  <span key={techIndex} className="tech-tag">{tech}</span>
-                ))}
-              </div>
-              <div className="project-links">
-                <a href={project.link} className="project-link">
-                  <span>Live Demo</span>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3" />
-                  </svg>
-                </a>
-                <a href={project.github} className="project-link">
-                  <span>GitHub</span>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                  </svg>
-                </a>
-              </div>
-            </div>
-          </motion.div>
+            {activeFilter === filter && (
+              <motion.span
+                className="filter-pill"
+                layoutId="filter-pill"
+                transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+              />
+            )}
+            <span className="filter-label">{filter}</span>
+          </motion.button>
         ))}
-      </div>
+      </motion.div>
+
+      <motion.div className="projects-grid" layout>
+        <AnimatePresence mode="popLayout">
+          {visibleProjects.map((project) => (
+            <motion.div
+              key={project.title}
+              className="project-cell"
+              layout
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="show"
+              viewport={viewportOnce}
+              exit={{ opacity: 0, scale: 0.92, transition: { duration: 0.2 } }}
+            >
+              <TiltCard className="project-card" max={7} whileHover={{ y: -10 }}>
+                <div className="project-image">
+                  {project.isImage ? (
+                    <img
+                      src={project.image}
+                      alt={`${project.title} screenshot`}
+                      className="project-img"
+                      width="450"
+                      height="250"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  ) : (
+                    <span className="project-emoji">{project.image}</span>
+                  )}
+                </div>
+                <div className="project-content tilt-layer-sm">
+                  <h3 className="project-title">{project.title}</h3>
+                  <p className="project-description">{project.description}</p>
+                  <div className="project-tech">
+                    {project.technologies.map((tech, techIndex) => (
+                      <span
+                        key={techIndex}
+                        className={`tech-tag ${
+                          tech === activeFilter ? 'matched' : ''
+                        }`}
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="project-links">
+                    <a
+                      href={project.link}
+                      className="project-link"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <span>Live Demo</span>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3" />
+                      </svg>
+                    </a>
+                    <a
+                      href={project.github}
+                      className="project-link"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <span>GitHub</span>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              </TiltCard>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </motion.div>
     </div>
   )
 }

@@ -214,3 +214,27 @@
     flex-direction: column;
   }
 }
+
+/* Newsletter feedback */
+.newsletter-status {
+  min-height: 1.5rem;
+  margin-top: 0.6rem;
+}
+
+.newsletter-msg {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.newsletter-msg.success {
+  color: var(--success);
+}
+
+.newsletter-msg.error {
+  color: #ef4444;
+}
+
+.newsletter-form button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}

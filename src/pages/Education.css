@@ -17,15 +17,29 @@
   padding: 2rem 0;
 }
 
-.timeline::before {
-  content: '';
+/* Dim rail, plus a gradient fill that scales down from the top as the section
+   scrolls into view (driven by <Timeline />).
+   The fill uses margin-left rather than translateX because framer-motion owns
+   its transform for the scaleY animation. */
+.timeline-track,
+.timeline-line {
   position: absolute;
+  top: 0;
   left: 50%;
-  transform: translateX(-50%);
   width: 4px;
   height: 100%;
-  background: var(--gradient);
+  margin-left: -2px;
   border-radius: 2px;
+}
+
+.timeline-track {
+  background: rgba(99, 102, 241, 0.16);
+}
+
+.timeline-line {
+  background: var(--gradient);
+  transform-origin: top center;
+  box-shadow: 0 0 14px rgba(99, 102, 241, 0.55);
 }
 
 .timeline-item {
@@ -167,8 +181,9 @@
   transform: translateY(-2px);
 }
 
-@media (max-width: 968px) {
-  .timeline::before {
+@media (max-width: 1024px) {
+  .timeline-track,
+  .timeline-line {
     left: 40px;
   }
 
@@ -201,8 +216,9 @@
   }
 }
 
-@media (max-width: 576px) {
-  .timeline::before {
+@media (max-width: 480px) {
+  .timeline-track,
+  .timeline-line {
     left: 30px;
   }
 
@@ -245,4 +261,141 @@
 .grade-badge:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+}
+
+/* ============================================
+   Achievements
+   ============================================ */
+
+/* Fixed 2 columns rather than auto-fit: with four cards, auto-fit produced a
+   3+1 layout that left the last card stranded on its own row. 2x2 stays
+   balanced at every width and gives the longer descriptions more room. */
+.achievement-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+  perspective: 1400px;
+}
+
+@media (max-width: 768px) {
+  .achievement-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.achievement-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 1.75rem;
+  background: var(--dark-light);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 18px;
+  height: 100%;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.achievement-card:hover {
+  border-color: var(--primary);
+  box-shadow: 0 14px 40px -14px rgba(99, 102, 241, 0.65);
+}
+
+.achievement-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.achievement-icon {
+  font-size: 2rem;
+  line-height: 1;
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  flex-shrink: 0;
+}
+
+.achievement-badge {
+  padding: 0.4rem 0.9rem;
+  border-radius: 50px;
+  background: var(--gradient);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.achievement-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.35;
+}
+
+.achievement-description {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+/* Ratings card renders its numbers as a row of chips instead of prose. */
+.rating-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  list-style: none;
+}
+
+.rating-item {
+  flex: 1 1 30%;
+  min-width: 88px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.7rem 0.5rem;
+  border-radius: 12px;
+  background: rgba(99, 102, 241, 0.08);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  text-align: center;
+}
+
+.rating-platform {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: 0.03em;
+}
+
+.rating-value {
+  font-size: 1.1rem;
+  font-weight: 800;
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+@media (max-width: 480px) {
+  .achievement-card {
+    padding: 1.35rem;
+  }
+
+  .achievement-icon {
+    width: 46px;
+    height: 46px;
+    font-size: 1.6rem;
+  }
+
+  .achievement-title {
+    font-size: 1.05rem;
+  }
 }

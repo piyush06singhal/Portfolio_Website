@@ -8,6 +8,9 @@ const ParticleBackground = () => {
     const canvas = canvasRef.current
     if (!canvas) return
 
+    // Static canvas when the user asks for reduced motion.
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
     const ctx = canvas.getContext('2d')
     canvas.width = window.innerWidth
     canvas.height = window.innerHeight
@@ -73,10 +76,10 @@ const ParticleBackground = () => {
         })
       })
 
-      requestAnimationFrame(animate)
+      frameId = requestAnimationFrame(animate)
     }
 
-    animate()
+    let frameId = requestAnimationFrame(animate)
 
     const handleResize = () => {
       canvas.width = window.innerWidth
@@ -86,6 +89,7 @@ const ParticleBackground = () => {
     window.addEventListener('resize', handleResize)
 
     return () => {
+      cancelAnimationFrame(frameId)
       window.removeEventListener('resize', handleResize)
     }
   }, [])

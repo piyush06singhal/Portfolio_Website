@@ -4,6 +4,13 @@
   box-sizing: border-box;
 }
 
+/* --dark      = page background
+   --dark-light = raised surface (cards, forms, footer)
+
+   Dark themes get depth from a LIGHTER surface; light themes get it from a
+   TINTED page plus shadow. So in light mode the two swap roles: the page is
+   slate-100 and cards are pure white. Previously both were near-white
+   (#ffffff vs #f8fafc — about 1.04:1) which made every card invisible. */
 :root {
   --primary: #6366f1;
   --primary-dark: #4f46e5;
@@ -14,20 +21,57 @@
   --text: #e2e8f0;
   --text-secondary: #94a3b8;
   --success: #10b981;
+  --hairline: rgba(99, 102, 241, 0.2);
+  --card-shadow: none;
+  --card-shadow-hover: none;
   --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
 }
 
 [data-theme="light"] {
-  --primary: #6366f1;
+  --primary: #5b5ce0;
   --primary-dark: #4f46e5;
   --secondary: #8b5cf6;
   --accent: #ec4899;
-  --dark: #ffffff;
-  --dark-light: #f8fafc;
-  --text: #1e293b;
+  --dark: #eef2f7;
+  --dark-light: #ffffff;
+  --text: #0f172a;
   --text-secondary: #475569;
-  --success: #10b981;
+  --success: #059669;
+  --hairline: rgba(15, 23, 42, 0.09);
+  --card-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 10px 28px -14px rgba(15, 23, 42, 0.22);
+  --card-shadow-hover: 0 2px 6px rgba(15, 23, 42, 0.07), 0 20px 44px -18px rgba(79, 70, 229, 0.4);
   --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
+}
+
+/* Light mode needs shadow to separate a white card from a tinted page —
+   the border alone doesn't carry it. Applied to every raised surface. */
+[data-theme="light"] .project-card,
+[data-theme="light"] .skill-category,
+[data-theme="light"] .skill-tile,
+[data-theme="light"] .achievement-card,
+[data-theme="light"] .timeline-content,
+[data-theme="light"] .contact-form,
+[data-theme="light"] .info-card,
+[data-theme="light"] .stat-card,
+[data-theme="light"] .footer-social-link,
+[data-theme="light"] .social-icon {
+  border-color: var(--hairline);
+  box-shadow: var(--card-shadow);
+}
+
+[data-theme="light"] .project-card:hover,
+[data-theme="light"] .skill-category:hover,
+[data-theme="light"] .achievement-card:hover,
+[data-theme="light"] .timeline-content:hover,
+[data-theme="light"] .info-card:hover {
+  border-color: rgba(99, 102, 241, 0.45);
+  box-shadow: var(--card-shadow-hover);
+}
+
+/* The white sheen that tracks the cursor is invisible on white cards. */
+[data-theme="light"] .tilt-glare {
+  mix-blend-mode: multiply;
+  opacity: 0.5;
 }
 
 body {
@@ -40,8 +84,11 @@ body {
   overflow-x: hidden;
 }
 
+/* svh = "small viewport height": excludes the mobile URL bar, so a full-height
+   section actually fits on screen. vh first as the fallback for old browsers. */
 #root {
   min-height: 100vh;
+  min-height: 100svh;
 }
 
 a {
@@ -53,6 +100,59 @@ button {
   cursor: pointer;
   border: none;
   outline: none;
+  font: inherit;
+  color: inherit;
+}
+
+/* Skip link — off-screen until focused, so keyboard users can jump the nav. */
+.skip-link {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -120%);
+  z-index: 10002;
+  padding: 0.75rem 1.5rem;
+  background: var(--primary);
+  color: #fff;
+  font-weight: 600;
+  border-radius: 0 0 10px 10px;
+  transition: transform 0.2s ease;
+}
+
+.skip-link:focus {
+  transform: translate(-50%, 0);
+}
+
+/* Visually hidden but still announced by screen readers. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Keyboard focus ring. `outline: none` is set all over this codebase, so this
+   uses a box-shadow ring instead — it can't be cancelled by those rules and
+   follows border-radius. Only shows for keyboard users, never on mouse click. */
+:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--dark), 0 0 0 5px var(--primary);
+  border-radius: 6px;
+}
+
+a:focus-visible,
+button:focus-visible {
+  border-radius: 8px;
+}
+
+input:focus-visible,
+textarea:focus-visible {
+  box-shadow: 0 0 0 2px var(--primary);
 }
 
 /* Scrollbar Styling */
@@ -83,56 +183,17 @@ button {
   }
 }
 
-@keyframes glow {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 40px rgba(99, 102, 241, 0.6);
-  }
-}
 
-/* Particle Background */
-.particles {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.3;
-}
-
-.particle {
-  position: absolute;
-  width: 4px;
-  height: 4px;
-  background: var(--primary);
-  border-radius: 50%;
-  animation: float-particle 20s infinite;
-}
-
-@keyframes float-particle {
-  0%, 100% {
-    transform: translateY(0) translateX(0);
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(-100vh) translateX(100px);
-    opacity: 0;
-  }
-}
-
-/* Smooth Transitions */
-* {
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+/* Theme Switch Transition
+   Applied only for the moment the theme flips (ThemeToggle adds the class,
+   then removes it). A permanent `* { transition: ... }` would fight every
+   hover and scroll animation on the site. */
+.theme-transition,
+.theme-transition *,
+.theme-transition *::before,
+.theme-transition *::after {
+  transition: background-color 0.35s ease, color 0.35s ease,
+    border-color 0.35s ease, fill 0.35s ease !important;
 }
 
 /* Selection Styling */
@@ -146,37 +207,19 @@ button {
   color: white;
 }
 
-/* Enhanced Card Hover Effects */
-.card-3d {
-  transform-style: preserve-3d;
-  transition: transform 0.5s ease;
-}
-
-.card-3d:hover {
-  transform: rotateY(5deg) rotateX(5deg);
-}
-
 /* Glassmorphism Effect */
 .glass {
   background: rgba(255, 255, 255, 0.05);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 [data-theme="light"] .glass {
   background: rgba(0, 0, 0, 0.02);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-/* Loading Animation */
-.loading-spinner {
-  width: 50px;
-  height: 50px;
-  border: 4px solid rgba(99, 102, 241, 0.1);
-  border-top-color: var(--primary);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
@@ -185,112 +228,30 @@ button {
   }
 }
 
-/* Tooltip */
-.tooltip {
-  position: relative;
-}
-
-.tooltip::before {
-  content: attr(data-tooltip);
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%) translateY(-10px);
-  padding: 0.5rem 1rem;
-  background: var(--dark-light);
-  color: var(--text);
-  border-radius: 8px;
-  font-size: 0.85rem;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: all 0.3s ease;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-}
-
-.tooltip:hover::before {
-  opacity: 1;
-  transform: translateX(-50%) translateY(-5px);
-}
-
-/* Scroll Progress Bar */
+/* Scroll Progress Bar
+   Width stays 100% — ScrollProgress drives it with a scaleX motion value.
+   (Setting width here previously over-constrained left/width/right and
+   collapsed the bar to zero, so it never showed.) */
 .scroll-progress {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 0%;
-  height: 4px;
-  background: var(--gradient);
-  z-index: 9999;
-  transition: width 0.1s ease;
+  transform-origin: 0%;
+  will-change: transform;
 }
 
-/* Enhanced Button Styles */
-.btn-glow {
-  position: relative;
-  overflow: hidden;
-}
-
-.btn-glow::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.3);
-  transform: translate(-50%, -50%);
-  transition: width 0.6s, height 0.6s;
-}
-
-.btn-glow:hover::after {
-  width: 300px;
-  height: 300px;
-}
-
-/* Text Gradient Animation */
-.text-gradient-animate {
-  background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent), var(--primary));
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: gradient-shift 3s linear infinite;
-}
-
-/* Floating Animation */
-@keyframes float-smooth {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-15px);
+/* Accessibility: honour the OS "reduce motion" setting everywhere. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
-.float-animation {
-  animation: float-smooth 3s ease-in-out infinite;
-}
-
-/* Fade In Animations */
-.fade-in {
-  animation: fadeIn 0.8s ease-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Responsive Typography */
-@media (max-width: 1200px) {
+/* Responsive Typography
+   Breakpoint scale used across the whole project: 480 / 768 / 1024 / 1280. */
+@media (max-width: 1280px) {
   html {
     font-size: 15px;
   }

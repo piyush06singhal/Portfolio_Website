@@ -1,0 +1,32 @@
+.split-text {
+  display: inline;
+}
+
+.split-word {
+  display: inline-block;
+  white-space: nowrap;
+  /* Gives the per-character rotateX somewhere to vanish to. */
+  perspective: 700px;
+}
+
+.split-char {
+  display: inline-block;
+  transform-origin: 50% 90%;
+  will-change: transform, opacity;
+}
+
+.split-space {
+  display: inline-block;
+}
+
+/* Each character paints its own slice of the shared gradient — the inline
+   background-size / background-position keep the run continuous. */
+.split-char-gradient,
+.split-static {
+  background-image: var(--gradient);
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
